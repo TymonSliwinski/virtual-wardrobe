@@ -4,6 +4,9 @@
  *
  */
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { IconProp } from "@fortawesome/fontawesome-svg-core"
+import { faGear } from "@fortawesome/free-solid-svg-icons"
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -68,7 +71,7 @@ function BottomTabNavigator() {
         name="TabOne"
         component={TabOneScreen}
         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-          title: 'Tab One',
+          title: 'Home',
           tabBarIcon: ({ color }) => <MaterialCommunityIcons name="home-outline" size={30} color={color} />,
           headerRight: () => (
             <Pressable
@@ -76,11 +79,11 @@ function BottomTabNavigator() {
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}>
-              <FontAwesome
-                name="gear"
-                size={25}
+              <FontAwesomeIcon
+                icon={faGear}
                 color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
+                style={{ marginRight: 20 }}
+                size={24}
               />
             </Pressable>
           ),
@@ -90,7 +93,7 @@ function BottomTabNavigator() {
         name="TabTwo"
         component={TabTwoScreen}
         options={({ navigation }: RootTabScreenProps<'TabTwo'>) => ({
-          title: 'Tab Two',
+          title: 'Collection',
           tabBarIcon: ({ color }) => <MaterialCommunityIcons name="hanger" size={28} color={color} />,
           headerRight: () => (
             <Pressable
@@ -98,31 +101,45 @@ function BottomTabNavigator() {
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}>
-              <FontAwesome
-                name="gear"
-                size={25}
+              <FontAwesomeIcon
+                icon={faGear}
                 color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
+                style={{ marginRight: 20 }}
+                size={24}
               />
             </Pressable>
           ),
         })}
       />
-      <BottomTab.Screen
+     <BottomTab.Screen
         name="TabThree"
         component={TabThreeScreen}
         options={{
-          title: 'Tab Three',
+          title: 'Add',
           tabBarIcon: ({ color }) => <MaterialCommunityIcons name="plus" size={30} color={color} />,
         }}
       />
       <BottomTab.Screen
         name="TabFour"
         component={TabFourScreen}
-        options={{
-          title: 'Tab Four',
+        options={({ navigation }: RootTabScreenProps<'TabFour'>) => ({
+          title: 'User',
           tabBarIcon: ({ color }) => <MaterialCommunityIcons name="account-circle-outline" size={24} color={color} />,
-        }}
+          headerRight: () => (
+            <Pressable
+              onPress={() => navigation.navigate('Modal')}
+              style={({ pressed }) => ({
+                opacity: pressed ? 0.5 : 1,
+              })}>
+              <FontAwesomeIcon
+                icon={faGear}
+                color={Colors[colorScheme].text}
+                style={{ marginRight: 20 }}
+                size={24}
+              />
+            </Pressable>
+          ),
+        })}
       />
     </BottomTab.Navigator>
   );
