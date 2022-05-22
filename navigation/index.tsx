@@ -4,14 +4,12 @@
  *
  */
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { IconProp } from "@fortawesome/fontawesome-svg-core"
-import { faGear } from "@fortawesome/free-solid-svg-icons"
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
+import { useContext } from 'react';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -23,21 +21,32 @@ import TabThreeScreen from '../screens/TabThreeScreen';
 import TabFourScreen from '../screens/TabFourScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+import Auth from '../screens/Auth';
+import { View } from '../components/Themed';
+import { UserContext } from '../userContext';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
+  const { userValue, setUserValue } = useContext(UserContext);
   return (
-    <NavigationContainer
-      linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <RootNavigator />
-    </NavigationContainer>
+    <>
+      {userValue ? (
+        <NavigationContainer
+          linking={LinkingConfiguration}
+          theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <RootNavigator />
+        </NavigationContainer>
+      ) : (
+        <SafeAreaProvider>
+          <Auth />
+        </SafeAreaProvider>
+      )}
+    </>
   );
 }
 
-/**
- * A root stack navigator is often used for displaying modals on top of all other content.
- * https://reactnavigation.org/docs/modal
- */
+
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
@@ -79,8 +88,8 @@ function BottomTabNavigator() {
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}>
-              <FontAwesomeIcon
-                icon={faGear}
+              <FontAwesome
+                name="gear"
                 color={Colors[colorScheme].text}
                 style={{ marginRight: 20 }}
                 size={24}
@@ -101,8 +110,8 @@ function BottomTabNavigator() {
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}>
-              <FontAwesomeIcon
-                icon={faGear}
+              <FontAwesome
+                name="gear"
                 color={Colors[colorScheme].text}
                 style={{ marginRight: 20 }}
                 size={24}
@@ -131,8 +140,8 @@ function BottomTabNavigator() {
               style={({ pressed }) => ({
                 opacity: pressed ? 0.5 : 1,
               })}>
-              <FontAwesomeIcon
-                icon={faGear}
+              <FontAwesome
+                name="gear"
                 color={Colors[colorScheme].text}
                 style={{ marginRight: 20 }}
                 size={24}
@@ -143,14 +152,4 @@ function BottomTabNavigator() {
       />
     </BottomTab.Navigator>
   );
-}
-
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
 }

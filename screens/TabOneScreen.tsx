@@ -3,11 +3,11 @@ import { Pressable, StyleSheet, TouchableOpacity } from 'react-native';
 import Button from '../components/Button';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import Hat from '../assets/images/hat.svg'
+import Jacket from '../assets/images/jacket.svg'
+import Shirt from '../assets/images/shirt.svg'
 import Pants from '../assets/images/pants.svg'
-import SomeShirt from '../assets/images/someShirt.svg'
-import '@fortawesome/fontawesome-svg-core'
-import { faArrowsDownToPeople, faBasketball, faHatCowboy, faHatHard, faHatWizard, faShirt, faShoePrints, faTShirt } from "@fortawesome/free-solid-svg-icons"
+import Shoes from '../assets/images/shoes.svg'
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
   return (
@@ -17,55 +17,50 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
           <Pressable
             onPress={() => console.log("hat")}
             style={({ pressed }) => ({
+              ...styles.svg,
+              marginLeft: 20,
               opacity: pressed ? 0.5 : 1,
             })}>
-            <FontAwesomeIcon
-              icon={faHatCowboy}
-              style={styles.clothes}
-              size={60}
-            />
+            <Hat width={60} height={60} fill={"black"} />
           </Pressable>
+          
           <Pressable
             onPress={() => console.log("hat")}
             style={({ pressed }) => ({
+              ...styles.svg,
               opacity: pressed ? 0.5 : 1,
             })}>
-            <FontAwesomeIcon
-              icon={faShirt}
-              style={styles.clothes}
-              size={60}
-            />
+            <Jacket width={100} height={100}  fill={"black"} />
           </Pressable>
+          
           <Pressable
             onPress={() => console.log("hat")}
             style={({ pressed }) => ({
+              ...styles.svg,
               opacity: pressed ? 0.5 : 1,
             })}>
-            <FontAwesomeIcon
-              icon={faHatHard}
-              style={styles.clothes}
-              size={60}
-            />
+            <Shirt width={100} height={100} stroke={"black"} fill={"black"} />
           </Pressable>
+          
           <Pressable
             onPress={() => console.log("hat")}
             style={({ pressed }) => ({
+              ...styles.svg,
               opacity: pressed ? 0.5 : 1,
             })}>
+            <Pants width={100} height={100} fill={"black"} />
           </Pressable>
+          
           <Pressable
             onPress={() => console.log("hat")}
             style={({ pressed }) => ({
+              ...styles.svg,
+              marginLeft: 15,
               opacity: pressed ? 0.5 : 1,
             })}>
-            <FontAwesomeIcon
-              icon={faHatWizard}
-              style={styles.clothes}
-              size={60}
-            />
+            <Shoes width={80} height={80} stroke={"black"} fill={"black"} />
           </Pressable>
-          <Pants width={100} height={100} style={styles.clothes} />
-          <SomeShirt width={100} height={100} style={styles.clothes} />
+          
           
         </View>
       </View>
@@ -98,8 +93,8 @@ const styles = StyleSheet.create({
     height: 1,
     width: '80%',
   },
-  clothes: {
-    marginLeft: 20,
+  svg: {
+    width: "30%",
     marginTop: 20,
-  },
+  }
 });
