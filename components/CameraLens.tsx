@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
 import { Camera } from 'expo-camera';
-import storage from '@react-native-firebase/storage';
-
+import PhotoUpload from './photoUpload';
+import Modal from 'react-native-modal';
 
 const WINDOW_HEIGHT = Dimensions.get("window").height;
 const captureSize = Math.floor(WINDOW_HEIGHT * 0.09);
@@ -12,8 +12,9 @@ export default function CameraLens() {
   const [flashMode, setFlashMode] = useState("off");
   const [isPreview, setIsPreview] = useState(false);
   const [capturedImage, setCapturedImage] = useState<any>(null)
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const cameraRef = useRef();
-  
+
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
@@ -21,20 +22,18 @@ export default function CameraLens() {
     })();
   }, []);
 
+  const handleModal = () => setIsModalVisible(() => !isModalVisible);
+
   const takePicture = async () => {
-    // if (cameraRef && cameraRef.current) {
-      // const options = { quality: 0.5, base64: true, skipProcessing: true };
-      const data = await cameraRef.current.takePictureAsync({skipProcessing: true});
-      const source = data.uri;
-      if (source) {
-        await cameraRef.current.pausePreview();
-        setIsPreview(true);
-        setCapturedImage(data)
-        console.log("picture source", source);
-      }
-    // } else {
-    //   return
-    // }
+    const options = { quality: 0.5, base64: true, skipProcessing: true };
+    const data = await cameraRef.current.takePictureAsync(options);
+    const source = data.uri;
+    if (source) {
+      await cameraRef.current.pausePreview();
+      setIsPreview(true);
+      setCapturedImage(data)
+      console.log("picture source", source);
+    }
   }
 
   const toggleFlashMode = () => {
@@ -48,7 +47,9 @@ export default function CameraLens() {
   }
 
   const savePicture = () => {
-    console.log("save");
+    if (!capturedImage) return;
+
+    handleModal();
   }
 
   const retakePicture = () => {
@@ -116,14 +117,21 @@ export default function CameraLens() {
   return (
     <View style={styles.container}>
       {isPreview && capturedImage ? (
-        <CameraPreview photo={capturedImage} savePicture={savePicture} retakePicture={retakePicture} />
-
+        <>
+          <CameraPreview photo={capturedImage} savePicture={savePicture} retakePicture={retakePicture} />
+          <Modal style={styles.modal} isVisible={isModalVisible}>
+            <PhotoUpload image={capturedImage} />
+            <TouchableOpacity style={styles.closeModal} onPress={handleModal}>
+              <Text>Cancel</Text>
+            </TouchableOpacity>
+          </Modal>
+        </>
       ) : (
         <>
           <Camera
             ref={cameraRef}
             style={styles.container}
-            flashMode={flashMode}
+            // flashMode={flashMode}
             onMountError={(error) => {
               console.log("camera error", error);
             }}
@@ -169,4 +177,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  modal: {
+    alignContent: "center",
+    justifyContent: "center",
+    opacity: 0.65,
+  },
+  closeModal: {
+    backgroundColor: 'grey',
+    width: '60%',
+    margin: 10,
+    top: '-15%',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+
+  }
 });
